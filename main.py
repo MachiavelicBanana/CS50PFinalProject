@@ -52,25 +52,31 @@ eth_close = ticker_df["Close"]
 #week sma
 periods = 7
 eth_7_sma = np.round(eth_close.rolling(window=periods).mean(), 2)
-ticker_df.insert(loc=7, column="7 SMA", value=eth_7_sma)
+ticker_df.insert(loc=8, column="7 SMA", value=eth_7_sma)
 
 #month sma:
 periods = 30
 eth_month_sma = np.round(eth_close.rolling(window=periods).mean(), 2)
-ticker_df.insert(loc=8, column="30 SMA", value=eth_month_sma)
+ticker_df.insert(loc=9, column="30 SMA", value=eth_month_sma)
 
 #90 days sma
 
 periods = 90
 ninety_sma = np.round(eth_close.rolling(window=periods).mean(), 2)
-ticker_df.insert(loc=9, column="90 SMA", value=ninety_sma)
+ticker_df.insert(loc=10, column="90 SMA", value=ninety_sma)
+
+
+# DAILY RETURNS:
+daily_returns = np.round(ticker_df["Close"].pct_change(), 3) * 100
+ticker_df.insert(loc=11, column="Daily Percentage Returns", value=daily_returns)
+
 
 #Since price one day ago is just yesterdays close and price 2 days ago is before yesterdays close it just acs as today which we want to predict we drop it:
 ticker_df = ticker_df.sort_index(axis=1).drop("Close", axis=1)
+
 #drop dead cells:
 ticker_df = ticker_df.dropna()
 print(ticker_df)
-# DAILY RETURNS:
 #Create a column showing the change percentage from the previous day -> Allowing the model to learn day-to-day volatility of the asset
 # TIME INDICATORS:
 #Break the date column into Month and day_of__week -> sopme asets trade differently throughout the week
